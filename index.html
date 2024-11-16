@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Profit Rechner</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            padding: 20px;
+            background-color: #f4f4f4;
+        }
+        .container {
+            width: 100%;
+            max-width: 600px;
+            margin: 0 auto;
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+        h1 {
+            text-align: center;
+        }
+        select, input {
+            padding: 10px;
+            width: 100%;
+            margin: 10px 0;
+            border-radius: 4px;
+            border: 1px solid #ccc;
+        }
+        button {
+            background-color: #4CAF50;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #45a049;
+        }
+        .result {
+            font-size: 18px;
+            text-align: center;
+            margin-top: 20px;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h1 id="title">Dropshipping Profit Rechner</h1>
+
+    <!-- Language Selector -->
+    <div style="text-align: center;">
+        <label for="language">Sprache / Language:</label>
+        <select id="language" onchange="switchLanguage()">
+            <option value="de">Deutsch</option>
+            <option value="en">English</option>
+        </select>
+    </div>
+
+    <!-- Currency Selector -->
+    <div style="text-align: center;">
+        <label for="currency">Währung / Currency:</label>
+        <select id="currency" onchange="switchCurrency()">
+            <option value="€">Euro (€)</option>
+            <option value="$">Dollar ($)</option>
+        </select>
+    </div>
+
+    <!-- Input Fields with labels and without placeholders -->
+    <label for="cost">Einkaufspreis / Cost Price:</label>
+    <input type="number" id="cost" required>
+
+    <label for="shipping">Versandkosten / Shipping Costs:</label>
+    <input type="number" id="shipping" required>
+
+    <label for="price">Verkaufspreis / Sale Price:</label>
+    <input type="number" id="price" required>
+
+    <label for="tax">Steuerquote (%) / Tax Rate (%):</label>
+    <input type="number" id="tax" required>
+
+    <button onclick="calculateProfit()">Berechnen / Calculate</button>
+
+    <!-- Result -->
+    <div id="result" class="result"></div>
+</div>
+
+<script>
+    let language = 'de'; // Default language
+    let currency = '€'; // Default currency (Euro)
+
+    // Language Data
+    const translations = {
+        'de': {
+            title: 'Dropshipping Profit Rechner',
+            cost: 'Einkaufspreis',
+            shipping: 'Versandkosten',
+            price: 'Verkaufspreis',
+            tax: 'Steuerquote (%)',
+            button: 'Berechnen',
+            result: 'Gewinn: ',
+            taxText: 'Steuerbetrag: '
+        },
+        'en': {
+            title: 'Dropshipping Profit Calculator',
+            cost: 'Cost Price',
+            shipping: 'Shipping Costs',
+            price: 'Sale Price',
+            tax: 'Tax Rate (%)',
+            button: 'Calculate',
+            result: 'Profit: ',
+            taxText: 'Tax Amount: '
+        }
+    };
+
+    // Change language dynamically
+    function switchLanguage() {
+        language = document.getElementById('language').value;
+        document.getElementById('title').textContent = translations[language].title;
+        document.querySelector('label[for="cost"]').textContent = translations[language].cost;
+        document.querySelector('label[for="shipping"]').textContent = translations[language].shipping;
+        document.querySelector('label[for="price"]').textContent = translations[language].price;
+        document.querySelector('label[for="tax"]').textContent = translations[language].tax;
+        document.querySelector('button').textContent = translations[language].button;
+    }
+
+    // Change currency dynamically
+    function switchCurrency() {
+        currency = document.getElementById('currency').value;
+    }
+
+    // Profit calculation
+    function calculateProfit() {
+        const cost = parseFloat(document.getElementById('cost').value);
+        const shipping = parseFloat(document.getElementById('shipping').value);
+        const price = parseFloat(document.getElementById('price').value);
+        const taxRate = parseFloat(document.getElementById('tax').value);
+
+        if (!cost || !shipping || !price || !taxRate) {
+            document.getElementById('result').textContent = 'Bitte füllen Sie alle Felder aus. / Please fill in all fields.';
+            return;
+        }
+
+        const taxAmount = (price * taxRate) / 100;
+        const totalPriceWithTax = price + taxAmount;
+        const profit = (totalPriceWithTax - (cost + shipping));
+
+        document.getElementById('result').innerHTML = `${translations[language].result} ${currency}${profit.toFixed(2)}<br>${translations[language].taxText} ${currency}${taxAmount.toFixed(2)}`;
+    }
+</script>
+
+</body>
+</html>
